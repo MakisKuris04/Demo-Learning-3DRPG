@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,9 @@ public class PlayerController : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Animator animaOfCharacter;
+    private GameObject EnemyToAttack;
 
-    //private Vector3 destination;
-
-
+    
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -22,20 +22,44 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        MouseManager.Instance.OnMouseClicked += MoveToTarget;//OnMouseClicked是参数V3的Action委托，通过+=注册（注册的方法必须参数相同）
+        MouseManager.Instance.OnMouseClicked += MoveToTarget;
+        MouseManager.Instance.OnEnemyClicked += EventAttack;
     }
-
+    
+    
     private void Update()
     {
-        //HaveAchievedToDestination(destination);
-        animaOfCharacter.SetFloat("speed", agent.velocity.sqrMagnitude);//使用Animator中的Blend tree
+        animaOfCharacter.SetFloat("speed", agent.velocity.sqrMagnitude);//使用Animator中的Blend tree;
+        MoveToAttackEnemy();
     }
 
+    
     private void MoveToTarget(Vector3 target)
     {
         agent.destination = target;
-        //destination = target;
-        //animaOfCharacter.SetBool("isMoving", true);
     }
-    //注册进OnMouseClicked中，OnMouseClicked调用时，连带调用注册在其中的该方法
+
+    private void EventAttack(GameObject target)
+    {
+        if(null == target)
+            return;
+
+        EnemyToAttack = target;
+    }
+
+    IEnumerator MoveToAttackEnemy()
+    {
+        agent.isStopped = false;
+        
+        transform.LookAt(EnemyToAttack.transform);
+
+        while (Vector3.Distance(EnemyToAttack.transform.position, transform.position) > 1)
+        {
+            agent.destination = EnemyToAttack.transform.position;
+            yield return null;
+        }
+
+        agent.isStopped = true;
+    }
+
 }

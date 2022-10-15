@@ -10,12 +10,12 @@ public class MouseManager : MonoBehaviour
 {
     public static MouseManager Instance;
 
-    
-    public event Action<Vector3> OnMouseClicked;
-    //用于注册要移动的角色(C#自带委托Action)
-    private RaycastHit hitInfo;
-    //接收RayCast返回的数据
     public Texture2D point, doorway, attack, target, arrow;
+    public event Action<Vector3> OnMouseClicked;
+    public event Action<GameObject> OnEnemyClicked;
+    
+    private RaycastHit hitInfo;
+    
 
 
     private void Awake()
@@ -35,7 +35,20 @@ public class MouseManager : MonoBehaviour
         MouseControll();//传点击位置到OnMouseClicked（Vector3）
     }
 
-
+    private void MouseControll()
+    {
+        if(Input.GetMouseButtonDown(0) && hitInfo.collider != null)
+        {
+            if(hitInfo.collider.gameObject.CompareTag("Ground"))
+                OnMouseClicked?.Invoke(hitInfo.point);//?.(来自C#6.0):判断？前对象是否为NULL，如果为NULL则返回NULL，否则执行后续语句
+            if(hitInfo.collider.gameObject.CompareTag("Enemy"))
+                OnEnemyClicked?.Invoke(hitInfo.transform.gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// 切换局内鼠标指针
+    /// </summary>
     private void SetCursorTexture()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);//ScreenPointToRay:返回从camera到传入位置的ray
@@ -67,22 +80,4 @@ public class MouseManager : MonoBehaviour
             }
         }
     }
-
-
-    private void MouseControll()
-    {
-        if(Input.GetMouseButtonDown(0) && hitInfo.collider != null)
-        {
-            if (hitInfo.collider.gameObject.CompareTag("Ground"))
-                OnMouseClicked?.Invoke(hitInfo.point);//?.(来自C#6.0):判断？前对象是否为NULL，如果为NULL则返回NULL，否则执行后续语句
-        }
-    }
 }
-
-
-
-
-/*//非继承MonoBehavior，使用Serializeable序列化使可见
-//EventVector3是鼠标点击的位置，需要获取该位置Vector3
-[System.Serializable]
-public class EventVector3 : UnityEvent<Vector3> { }//需要传入Vector3的Event事件*/
