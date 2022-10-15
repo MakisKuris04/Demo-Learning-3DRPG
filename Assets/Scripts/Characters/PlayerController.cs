@@ -38,15 +38,4 @@ public class PlayerController : MonoBehaviour
         //animaOfCharacter.SetBool("isMoving", true);
     }
     //注册进OnMouseClicked中，OnMouseClicked调用时，连带调用注册在其中的该方法
-
-    /*private void HaveAchievedToDestination(Vector3 destination)
-    {
-        if (null == destination)
-            return;
-
-        if (destination.x == this.transform.position.x && destination.z == this.transform.position.z)//平面上，竖直方向上x和z是相同的，y为竖轴
-        {
-            animaOfCharacter.SetBool("isMoving", false);
-        }
-    }*/
 }

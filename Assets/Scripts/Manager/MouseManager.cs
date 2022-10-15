@@ -13,7 +13,7 @@ public class MouseManager : MonoBehaviour
     
     public event Action<Vector3> OnMouseClicked;
     //用于注册要移动的角色(C#自带委托Action)
-    RaycastHit hitInfo;
+    private RaycastHit hitInfo;
     //接收RayCast返回的数据
     public Texture2D point, doorway, attack, target, arrow;
 
@@ -53,7 +53,7 @@ public class MouseManager : MonoBehaviour
                     Cursor.SetCursor(doorway, new Vector2(16, 16), CursorMode.Auto);
                     break;
 
-                case "attack":
+                case "Enemy":
                     Cursor.SetCursor(attack, new Vector2(16, 16), CursorMode.Auto);
                     break;
 
