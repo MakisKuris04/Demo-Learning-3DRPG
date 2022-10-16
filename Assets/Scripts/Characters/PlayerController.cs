@@ -13,25 +13,25 @@ public class PlayerController : MonoBehaviour
     private GameObject EnemyToAttack;
     private float attackCooldown;
 
+    public float attackRange;
+
     
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animaOfCharacter = GetComponent<Animator>();
     }
-
-
+    
     private void Start()
     {
         MouseManager.Instance.OnMouseClicked += EventMove;
         MouseManager.Instance.OnEnemyClicked += EventAttack;
     }
     
-    
     private void Update()
     {
-        animaOfCharacter.SetFloat("speed", agent.velocity.sqrMagnitude);//使用Animator中的Blend tree;
-        AttackCountDoen();
+        animaOfCharacter.SetFloat("speed", agent.velocity.sqrMagnitude);
+        AttackCountDown();
     }
 
     //Move
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
         transform.LookAt(EnemyToAttack.transform);
 
-        while (Vector3.Distance(EnemyToAttack.transform.position, transform.position) > 10)
+        while (Vector3.Distance(EnemyToAttack.transform.position, transform.position) > attackRange)
         {
             agent.destination = EnemyToAttack.transform.position;
             yield return null;
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void AttackCountDoen()
+    private void AttackCountDown()
     {
         attackCooldown -= Time.deltaTime;
     }
