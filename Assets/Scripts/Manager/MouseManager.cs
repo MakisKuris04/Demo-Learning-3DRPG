@@ -9,13 +9,11 @@ using System;
 public class MouseManager : MonoBehaviour
 {
     public static MouseManager Instance;
-
     public Texture2D point, doorway, attack, target, arrow;
     public event Action<Vector3> OnMouseClicked;
     public event Action<GameObject> OnEnemyClicked;
     
     private RaycastHit hitInfo;
-    
 
 
     private void Awake()
@@ -28,13 +26,13 @@ public class MouseManager : MonoBehaviour
             Instance = this;
     }
 
-
     private void Update()
     {
         SetCursorTexture();//生成ray，刷新hitInfo
         MouseControll();//传点击位置到OnMouseClicked（Vector3）
     }
 
+    
     private void MouseControll()
     {
         if(Input.GetMouseButtonDown(0) && hitInfo.collider != null)
